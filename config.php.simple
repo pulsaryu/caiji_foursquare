@@ -1,0 +1,9 @@
+<?php
+return array(
+    'foursquare_id' => 'FOURSQUARE ID',
+    'foursquare_secret' => 'FOURSQUARE SECRET',
+    'max_latitude' => 22.50,
+    'min_latitude' => 22.20,
+    'max_longitude' => 114.30,
+    'min_longitude' => 114.00,
+);

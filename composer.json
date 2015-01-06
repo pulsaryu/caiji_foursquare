@@ -1,0 +1,6 @@
+{
+    "require" : {
+        "guzzlehttp/guzzle": "~5.0",
+        "jwage/purl": "0.0.6"
+    }
+}
