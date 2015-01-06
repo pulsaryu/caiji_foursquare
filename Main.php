@@ -5,6 +5,7 @@
  * Date: 2015-01-05
  * Time: 16:57
  */
+require 'FileCache.php';
 
 class Main {
 
@@ -15,21 +16,21 @@ class Main {
     public $maxLongitude;
     public $minLongitude;
     private $httpClient;
+
     /**
      * @var Cache
      */
     private $fileCache;
 
-    public function __construct($fileCache)
+    public function __construct($storage)
     {
         $this->httpClient = new GuzzleHttp\Client();
-        $this->fileCache = $fileCache;
+        $this->fileCache = new FileCache($storage . '/cache');
+
     }
 
-    public function fire()
+    public function fire($callback)
     {
-        $n = 0;
-        $m = 0;
         for ($latitude = $this->maxLatitude; $latitude > $this->minLatitude; $latitude -= 0.001) {
             for ($longitude = $this->minLongitude; $longitude < $this->maxLongitude; $longitude += 0.001) {
                 $sw = $latitude .','. $longitude;
@@ -47,19 +48,14 @@ class Main {
                         $id = $venue['id'];
                         $detailBody = $this->httpRequestGet($this->createDetailUrl($id), $id);
                         $detail = json_decode($detailBody, true);
-                        echo $detail['response']['venue']['name'], PHP_EOL;
-                        $m ++;
+                        $venue = $detail['response']['venue'];
+
+                        $callback($venue);
                     }
 
                 }
-
-                echo "$n | $m", "\r";
-
-                $n ++;
             }
         }
-
-        echo $n;
     }
 
     private function httpRequestGet($url, $key = null)
